@@ -21,7 +21,7 @@ Track Day Racing is a top-down racing game featuring 80s arcade-style physics, A
 ## System Requirements
 
 ### Hardware
-- **Platform**: Foenix F256K, F256K2, F256Jr, or F256Jr2
+- **Platform**: Wildbits F256K, F256K2, F256Jr, or F256Jr2
 - **CPU**: WDC 65C02 (8-bit mode on 65C816 hardware)
 - **Graphics**: TinyVicky II (Tilemap + Sprite Engine)
 - **Sound**: PSG + SID chip
@@ -32,7 +32,7 @@ Track Day Racing is a top-down racing game featuring 80s arcade-style physics, A
 
 ## Installation
 
-1. Copy `race.pgz` to your Foenix system
+1. Copy `race.pgz` to your F256 system
 2. Type `/- race.pgz` from your BASIC screen
 
 
@@ -124,8 +124,8 @@ Race/
 
 **Author**: Michael Cassera  
 **Year**: 2025  
-**Platform**: Foenix F256 Family  
-**Event**: Foenix Game Jam (Oct-Dec 2025)
+**Platform**: Wildbits Computing Company F256 Family  
+**Event**: F256 Game Jam (Oct-Dec 2025)
 
 ## Additional Resources
 
@@ -139,3 +139,4 @@ Race/
 ---
 
 *Ready, Set, Race! 🏁*
+
