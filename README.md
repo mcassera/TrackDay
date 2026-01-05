@@ -42,7 +42,7 @@ Track Day Racing is a top-down racing game featuring 80s arcade-style physics, A
 - **Up**: Accelerate
 - **Down**: Brake/Reverse
 - **Left/Right**: Steer left/right
-- **Button**: Start race / Select options
+- **Button**: Start race / Select options / Brake during race play
 
 
 ## Gameplay
@@ -139,4 +139,5 @@ Race/
 ---
 
 *Ready, Set, Race! 🏁*
+
 
