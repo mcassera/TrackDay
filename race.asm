@@ -1176,10 +1176,14 @@ jRight:
 jButton:
 	lda JoyEvent                         ; Reload joystick state bitmap
 	and #$10                             ; Isolate bit 4 (button 0 flag)
-	beq jReset                           ; If bit 4 clear (button not pressed), clear debounce flag
+	beq jReset                           ; If bit 4 clear (button not pressed), clear debounce 
+    lda race_on                          ; Check game state flag
+    cmp #$08                             ; Compare with state $08 (race started)
+    bcs skip_bounce                      ; If race started (≥$08), skip debounce (allow rapid presses)
 	lda joyBhold                         ; Load debounce flag (was button held from last frame?)
 	bne bounce                           ; If held (joyBhold≠0), ignore this press (debounce)
-	lda #$01                             ; Button newly pressed (not held)
+skip_bounce:
+    lda #$01                             ; Button newly pressed (not held)
 	sta joyB                             ; Set button state flag (signal to game logic)
 	sta joyBhold                         ; Set debounce flag (mark button as held)
 jDone:
@@ -1820,6 +1824,11 @@ finish_race_check:
 
 normal_drive:
     ; --- Dispatch to appropriate speed handler based on joystick input ---
+    lda joyB                             ; Load button input (second button for brakes)
+    beq check_joyY                       ; If no button pressed, check joyY for throttle    
+    lda #$01                             ; Load brake command ($01 = brake input)
+    sta joyY                             ; Override joystick Y to force braking (stop player)
+check_joyY:    
     lda joyY                             ; Load vertical joystick input
     beq decelerate                       ; If joyY = $00 (center) → coast/decelerate
     cmp #$01                             ; Check if joyY = $01 (down/brake)
@@ -7223,6 +7232,12 @@ csLoop:
 ; **************************************************************************************************************
 ; Working Memory - Game state variables and race data storage
 ; **************************************************************************************************************
+
+; --- controller type ---
+controller_type: .byte $00                  ; Controller type: $00 = none, $01 = joystick, $ff = SNES pad
+                                            ; (set during initialization button used at startup screen)
+                                            ; button for joystick, start button for SNES pad
+                                            ; bps for joystick, bmi for SNES pad, beq for none
 
 ; --- Screen and UI State Flags ---
 thanks_screen: .byte $00                    ; Flag: Thanks/credits screen displayed ($00 = no, $01 = yes)
