@@ -749,6 +749,54 @@ done_lut:
 ; Clobbers: A, X, Y, ptr_src, ptr_dst, various sprite registers
 ; **************************************************************************************************************
 
+; **************************************************************************************************************
+; clear_sprites - Reset all sprite slots to disabled state
+; **************************************************************************************************************
+; Purpose: Clear all 64 sprite slots to prevent leftover sprites from appearing after reset
+;          Disables each sprite by writing 0 to its control register
+; Algorithm:
+;   1. Initialize pointer to sprite register base (VKY_SP0)
+;   2. Loop through all 64 sprite slots (63 down to 0)
+;   3. For each slot: Write 0 to control register (offset 0)
+;   4. Advance pointer by 8 bytes to next sprite slot
+; Inputs: None
+; Outputs: All 64 sprite control registers set to 0 (disabled)
+; Memory: Each sprite slot = 8 bytes, starting at VKY_SP0
+; Clobbers: A, X, Y, ptr_dst
+; **************************************************************************************************************
+
+    ; --- Initialize loop counter and destination pointer ---
+    ldx #$40                             ; Start with sprite slot 64 (highest slot+1)
+    lda #<VKY_SP0                        ; Load sprite register base address low byte
+    sta ptr_dst                          ; Store in destination pointer low
+    lda #>VKY_SP0                        ; Load sprite register base address high byte
+    sta ptr_dst+1                        ; Store in destination pointer high
+    ldy #$00                             ; Y = offset 0 (control register within sprite slot)
+
+clear_sprites:
+    ; --- Disable sprite by clearing control register ---
+    lda #$00                             ; Disable sprite (control = 0)
+    sta (ptr_dst),y                      ; Write to sprite control register at offset 0
+    
+    ; --- Advance pointer to next sprite slot (8 bytes forward) ---
+    clc                                  ; Clear carry for 16-bit addition
+    lda ptr_dst                          ; Load destination pointer low byte
+    adc #$08                             ; Add 8 bytes (size of one sprite slot)
+    sta ptr_dst                          ; Store updated pointer low
+    lda ptr_dst+1                        ; Load destination pointer high byte
+    adc #$00                             ; Add carry if any
+    sta ptr_dst+1                        ; Store updated pointer high
+    
+    ; --- Loop control ---
+    dex                                  ; Decrement sprite slot counter
+    bne clear_sprites                    ; If not zero, continue clearing next slot
+
+
+
+
+
+
+
 ; ============================================================================
 ; PLAYER CAR SPRITE SETUP (Slot 20)
 ; ============================================================================
